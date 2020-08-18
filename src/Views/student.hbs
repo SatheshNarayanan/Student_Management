@@ -1,0 +1,66 @@
+<div class="container">
+  <h1>Student Details</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Action</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data}}
+      <tr>
+        <th scope="row">{{this.id}}</th>
+        <td>{{this.firstName}}</td>
+        <td>{{this.lastName}}</td>
+        <td><a href="/edit-students/{{this.id}}">Edit</a></td>
+        <td><a href="/delete/{{this.id}}" data-studentId="{{this.id}}" class="delete-button">Delete</a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <a class="btn btn-primary btn-lg" href="/Addstudents">Add Student</a>
+</div>
+
+<script>
+  window.document.body.addEventListener("click", event => {
+    const $targetElement = event.target;
+    if ($targetElement.classList.contains("delete-button")) {
+      event.preventDefault();
+      const studentId = $targetElement.getAttribute("data-studentId")
+      console.log(studentId)
+
+      const config = {
+        method: "DELETE"
+      }
+
+      fetch(`/student/${studentId}`, config)
+        .then(response => {
+          if (response.status === 200) {
+            return response.json()
+          } else {
+            throw (new Error(response.status))
+          }
+        }
+        )
+        .then(data => {
+          window.location.reload()
+        })
+        .catch(error => {
+          switch (error.message) {
+            case "400":
+              alert("Please check form values...");
+              break;
+            case "500":
+              alert("Please Try after some time...");
+              break;
+            default:
+              console.error(error);
+          }
+        });
+    }
+  })
+</script>
