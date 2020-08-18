@@ -104,6 +104,8 @@ app.get("*", (request, response) => {
   response.status(404).send("Page not found");
 });
 
-app.listen(8080, () => {
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
   console.log("server is running");
 });
